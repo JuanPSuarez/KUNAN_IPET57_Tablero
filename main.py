@@ -7,6 +7,9 @@ from data_processing import process_issues
 from excel_export import export_to_excel
 import os
 
+def sumar_un_dia(fecha):
+    return fecha.addDays(1)
+
 class RedmineReportApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -53,12 +56,12 @@ class RedmineReportApp(QMainWindow):
     def generate_report(self):
         updated_date_range = [
             pd.to_datetime(self.start_date_updated.date().toString("yyyy-MM-dd")),
-            pd.to_datetime(self.end_date_updated.date().toString("yyyy-MM-dd")),
+            pd.to_datetime(self.end_date_updated.date().addDays(1).toString("yyyy-MM-dd")),
         ]
 
         created_date_range = [
             pd.to_datetime(self.start_date_created.date().toString("yyyy-MM-dd")),
-            pd.to_datetime(self.end_date_created.date().toString("yyyy-MM-dd")),
+            pd.to_datetime(self.end_date_created.date().addDays(1).toString("yyyy-MM-dd")),
         ]
 
         redmine_url = 'https://mesaregistrocivil.cba.gov.ar/redmine/'
