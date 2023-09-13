@@ -1,4 +1,6 @@
 import pandas as pd
+import numpy as np
+
 
 def process_issues(issues, author_ids=None, updated_date_range=None, created_date_range=None):
     data = []
@@ -19,11 +21,13 @@ def process_issues(issues, author_ids=None, updated_date_range=None, created_dat
                 created_date_range[0] <= created_on <= created_date_range[1])
 
         if updated_date_filter_passed:
+            days_open = np.busday_count(created_on.date(), updated_on.date())
+
             issue_data = {
                 'ID': issue.id,
                 'Tipo': issue.tracker.name,
                 'Author': issue.author.name,
-                'Días abierto': (pd.to_datetime(issue.updated_on) - pd.to_datetime(issue.created_on)).days,
+                'Días abierto': days_open,
                 'Oficina': custom_fields_data.get('Oficina', None),
                 'Canal de contacto': custom_fields_data.get('Canal de contacto', None),
                 'Sistemas F': issue.custom_fields.get('Sistema') or issue.tracker.name,
@@ -39,7 +43,7 @@ def process_issues(issues, author_ids=None, updated_date_range=None, created_dat
                 'ID': issue.id,
                 'Tipo': issue.tracker.name,
                 'Author': issue.author.name,
-                'Días abierto': (pd.to_datetime(issue.updated_on) - pd.to_datetime(issue.created_on)).days,
+                'Días abierto': days_open,
                 'Creado': issue.created_on,
                 'Actualizado': issue.updated_on,
                 'Oficina': custom_fields_data.get('Oficina', None),
