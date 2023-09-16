@@ -55,12 +55,12 @@ class RedmineReportApp(QMainWindow):
 
     def generate_report(self):
         updated_date_range = [
-            pd.to_datetime(self.start_date_updated.date().toString("yyyy-MM-dd")),
+            pd.to_datetime(self.start_date_updated.date().addDays(1).toString("yyyy-MM-dd")),
             pd.to_datetime(self.end_date_updated.date().addDays(1).toString("yyyy-MM-dd")),
         ]
 
         created_date_range = [
-            pd.to_datetime(self.start_date_created.date().toString("yyyy-MM-dd")),
+            pd.to_datetime(self.start_date_created.date().addDays(1).toString("yyyy-MM-dd")),
             pd.to_datetime(self.end_date_created.date().addDays(1).toString("yyyy-MM-dd")),
         ]
 
