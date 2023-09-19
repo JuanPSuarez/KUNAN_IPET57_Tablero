@@ -1,14 +1,15 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QDateEdit, QPushButton, QLabel
 from PyQt5.QtCore import QDate
-import pandas as pd
 from redmine_api import connect_to_redmine, get_issues
 from data_processing import process_issues
 from excel_export import export_to_excel
 import os
 
+
 def sumar_un_dia(fecha):
     return fecha.addDays(1)
+
 
 class RedmineReportApp(QMainWindow):
     def __init__(self):
@@ -54,15 +55,14 @@ class RedmineReportApp(QMainWindow):
         self.central_widget.setLayout(layout)
 
     def generate_report(self):
-        updated_date_range = [
-            pd.to_datetime(self.start_date_updated.date().addDays(1).toString("yyyy-MM-dd")),
-            pd.to_datetime(self.end_date_updated.date().addDays(1).toString("yyyy-MM-dd")),
-        ]
+        updated_start_date = self.start_date_updated.date().addDays(1).toString("yyyy-MM-dd") + "T00:00:00Z"
+        updated_end_date = self.end_date_updated.date().addDays(1).toString("yyyy-MM-dd") + "T23:59:59Z"
 
-        created_date_range = [
-            pd.to_datetime(self.start_date_created.date().addDays(1).toString("yyyy-MM-dd")),
-            pd.to_datetime(self.end_date_created.date().addDays(1).toString("yyyy-MM-dd")),
-        ]
+        created_start_date = self.start_date_created.date().addDays(1).toString("yyyy-MM-dd") + "T00:00:00Z"
+        created_end_date = self.end_date_created.date().addDays(1).toString("yyyy-MM-dd") + "T23:59:59Z"
+
+        updated_date_range = [updated_start_date, updated_end_date]
+        created_date_range = [created_start_date, created_end_date]
 
         redmine_url = 'https://mesaregistrocivil.cba.gov.ar/redmine/'
         redmine_key = '5d6cec506b5b22ec8930ad02da88ceb8aa8955dc'
