@@ -1,0 +1,41 @@
+
+header{
+    background-color: #4E606A;
+}
+
+main .container{
+    text-align: center;
+    
+  
+}
+
+main {
+    justify-content: center;
+    text-align: center;
+    
+}
+h1{
+    color: #40BAFF;
+    font-size: 30px;
+}
+
+main img{
+    width: 400px;
+    height: 400px;
+}
+main p{
+    text-align: center;
+    padding: 30px;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+
+}
+
+footer{
+    width: 100%;
+    padding: 27px;
+    background-color: #4E606A;
+}
+
+
