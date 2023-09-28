@@ -1,29 +1,18 @@
 import pandas as pd
 import numpy as np
 
-def process_issues(issues_updated=None, issues_created=None, updated_date_range=None, created_date_range=None):
+def process_issues(issues_updated=None, issues_created=None):
     data_updated = []
     data_created = []
     author_ids_to_filter = [117, 69, 143, 131, 113, 46, 145, 54, 135]
-
-    if updated_date_range:
-        updated_start_date = pd.to_datetime(updated_date_range[0]).replace(tzinfo=None)
-        updated_end_date = pd.to_datetime(updated_date_range[1]).replace(tzinfo=None)
-        created_start_date = pd.to_datetime(created_date_range[0]).replace(tzinfo=None)
-        created_end_date = pd.to_datetime(created_date_range[1]).replace(tzinfo=None)
-    else:
-        updated_start_date = None
-        updated_end_date = None
-        created_start_date = None
-        created_end_date = None
 
     if issues_updated:
         for issue in issues_updated:
             custom_fields = issue.custom_fields
             custom_fields_data = {field.name: field.value for field in custom_fields}
 
-            created_on = pd.to_datetime(issue.created_on).replace(tzinfo=None)
-            updated_on = pd.to_datetime(issue.updated_on).replace(tzinfo=None)
+            created_on = pd.to_datetime(issue.created_on)
+            updated_on = pd.to_datetime(issue.updated_on)
 
             days_open = np.busday_count(created_on.date(), updated_on.date())
 
@@ -49,8 +38,8 @@ def process_issues(issues_updated=None, issues_created=None, updated_date_range=
                 custom_fields = issue.custom_fields
                 custom_fields_data = {field.name: field.value for field in custom_fields}
 
-                created_on = pd.to_datetime(issue.created_on).replace(tzinfo=None)
-                updated_on = pd.to_datetime(issue.updated_on).replace(tzinfo=None)
+                created_on = pd.to_datetime(issue.created_on)
+                updated_on = pd.to_datetime(issue.updated_on)
 
                 days_open = np.busday_count(created_on.date(), updated_on.date())
 
