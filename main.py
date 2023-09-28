@@ -1,11 +1,11 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QDateEdit, QPushButton, QLabel
 from PyQt5.QtCore import QDate
-from redmine_api import connect_to_redmine, get_issues_by_update, get_issues_by_create
+from redmine_api import connect_to_redmine, get_issues, get_issues2
 from data_processing import process_issues
 from excel_export import export_to_excel
+from datetime import datetime, timedelta
 import os
-
 
 class RedmineReportApp(QMainWindow):
     def __init__(self):
@@ -50,6 +50,24 @@ class RedmineReportApp(QMainWindow):
 
         self.central_widget.setLayout(layout)
 
+    def format_fecha(self, fecha_a_formatear):
+        # Fecha y hora en formato ISO 8601 con 'Z'
+        fecha_iso8601 = f'{fecha_a_formatear}'
+
+        # Extraer la parte de la fecha y hora sin 'Z'
+        fecha_sin_z = fecha_iso8601[:-1]
+
+        # Convertir a objeto datetime
+        fecha_datetime = datetime.fromisoformat(fecha_sin_z)
+
+        # Sumar 3 horas
+        nueva_fecha = fecha_datetime + timedelta(hours=3)
+
+        # Convertir la nueva fecha a formato ISO 8601 con 'Z'
+        nueva_fecha_iso8601 = nueva_fecha.isoformat() + 'Z'
+     
+        return nueva_fecha_iso8601
+
     def generate_report(self):
         updated_start_date = self.start_date_updated.date().toString("yyyy-MM-dd") + "T00:00:00Z"
         updated_end_date = self.end_date_updated.date().toString("yyyy-MM-dd") + "T23:59:59Z"
@@ -57,8 +75,11 @@ class RedmineReportApp(QMainWindow):
         created_start_date = self.start_date_created.date().toString("yyyy-MM-dd") + "T00:00:00Z"
         created_end_date = self.end_date_created.date().toString("yyyy-MM-dd") + "T23:59:59Z"
 
-        updated_date_range = [updated_start_date, updated_end_date]
-        created_date_range = [created_start_date, created_end_date]
+        updated_date_range = [self.format_fecha(updated_start_date), self.format_fecha(updated_end_date)]
+        created_date_range = [self.format_fecha(created_start_date), self.format_fecha(created_end_date)]
+
+        #print(updated_date_range)
+        #print(created_date_range)
 
         redmine_url = 'https://mesaregistrocivil.cba.gov.ar/redmine/'
         redmine_key = '5d6cec506b5b22ec8930ad02da88ceb8aa8955dc'
@@ -66,17 +87,21 @@ class RedmineReportApp(QMainWindow):
 
         redmine = connect_to_redmine(redmine_url, redmine_key)
 
-        issues_updated = get_issues_by_update(redmine, project_id, updated_date_range=updated_date_range)
+        #print('Conectado')
 
-        issues_created = get_issues_by_create(redmine, project_id, created_date_range=created_date_range)
+        issues_updated = get_issues(redmine, project_id, updated_date_range)
+        issues_created = get_issues2(redmine, project_id, created_date_range)
 
-        df_updated, df_created = process_issues(issues_updated, issues_created,
-                                               updated_date_range=updated_date_range,
-                                               created_date_range=created_date_range)
+        #print('Issues filtradas')
+        #print(len(issues_created))
+
+        df_updated, df_author = process_issues(issues_updated, issues_created)
 
         excel_file = 'problemas_redmine.xlsx'
 
-        export_to_excel(df_updated, df_created, excel_file)
+        export_to_excel(df_updated, df_author, excel_file)
+
+        #print('Exportando excel')
 
         os.system('start excel.exe "{}"'.format(excel_file))
 

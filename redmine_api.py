@@ -7,16 +7,21 @@ def connect_to_redmine(redmine_url, redmine_key):
 
     return Redmine(redmine_url, key=redmine_key, requests={'verify': False})
 
-def get_issues_by_create(redmine, project_id, created_date_range):
-    filters = {'project_id': project_id, 'status_id': 5}
-    if created_date_range:
-        created_start_date, created_end_date = created_date_range
-        filters['created_on'] = f'><{created_start_date}|{created_end_date}'
+
+def get_issues(redmine, project_id, updated_date_range):
+    filters = {'project_id': project_id, 
+               'status_id': 5,
+               'updated_on':f'><{updated_date_range[0]}|{updated_date_range[1]}'}
+    
+    #print('Filtrado 1')
+    
     return redmine.issue.filter(**filters)
 
-def get_issues_by_update(redmine, project_id, updated_date_range):
-    filters = {'project_id': project_id, 'status_id': 5}
-    if updated_date_range:
-        updated_start_date, updated_end_date = updated_date_range
-        filters['updated_on'] = f'><{updated_start_date}|{updated_end_date}'
+def get_issues2(redmine, project_id, created_range):
+    filters = {'project_id': project_id, 
+               'status_id': 5, 
+               'created_on': f'><{created_range[0]}|{created_range[1]}'}
+
+    #print('Filtrado 2')
+
     return redmine.issue.filter(**filters)
