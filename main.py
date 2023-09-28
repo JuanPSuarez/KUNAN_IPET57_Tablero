@@ -5,7 +5,7 @@ from redmine_api import connect_to_redmine, get_issues_by_update, get_issues_by_
 from data_processing import process_issues
 from excel_export import export_to_excel
 import os
-
+from datetime import datetime, timedelta
 
 class RedmineReportApp(QMainWindow):
     def __init__(self):
@@ -56,6 +56,16 @@ class RedmineReportApp(QMainWindow):
 
         created_start_date = self.start_date_created.date().toString("yyyy-MM-dd") + "T00:00:00Z"
         created_end_date = self.end_date_created.date().toString("yyyy-MM-dd") + "T23:59:59Z"
+
+        updated_start_date = datetime.strptime(updated_start_date, "%Y-%m-%dT%H:%M:%SZ") + timedelta(hours=3)
+        updated_end_date = datetime.strptime(updated_end_date, "%Y-%m-%dT%H:%M:%SZ") + timedelta(hours=3)
+        created_start_date = datetime.strptime(created_start_date, "%Y-%m-%dT%H:%M:%SZ") + timedelta(hours=3)
+        created_end_date = datetime.strptime(created_end_date, "%Y-%m-%dT%H:%M:%SZ") + timedelta(hours=3)
+
+        updated_start_date = updated_start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+        updated_end_date = updated_end_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+        created_start_date = created_start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+        created_end_date = created_end_date.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         updated_date_range = [updated_start_date, updated_end_date]
         created_date_range = [created_start_date, created_end_date]
