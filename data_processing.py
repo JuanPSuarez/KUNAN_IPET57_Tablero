@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 
-def process_issues(issues_updated=None, issues_author=None, updated_date_range=None, created_date_range=None):
+def process_issues(issues_updated=None, issues_created=None, updated_date_range=None, created_date_range=None):
     data_updated = []
-    data_author = []
+    data_created = []
     author_ids_to_filter = [117, 69, 143, 131, 113, 46, 145, 54, 135]
 
     if updated_date_range:
@@ -43,8 +43,8 @@ def process_issues(issues_updated=None, issues_author=None, updated_date_range=N
 
             data_updated.append(issue_data_updated)
 
-    if issues_author:
-        for issue in issues_author:
+    if issues_created:
+        for issue in issues_created:
             if issue.author.id in author_ids_to_filter:
                 custom_fields = issue.custom_fields
                 custom_fields_data = {field.name: field.value for field in custom_fields}
@@ -73,10 +73,10 @@ def process_issues(issues_updated=None, issues_author=None, updated_date_range=N
                                             custom_fields_data.get('Modulo Generales y Tramites', '')]).strip(', ')
                 }
 
-                data_author.append(additional_issue_data_author)
+                data_created.append(additional_issue_data_author)
 
     df_updated = pd.DataFrame(data_updated)
-    df_author = pd.DataFrame(data_author)
+    df_created = pd.DataFrame(data_created)
 
-    return df_updated, df_author
+    return df_updated, df_created
 
