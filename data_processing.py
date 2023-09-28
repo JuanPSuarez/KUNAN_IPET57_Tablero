@@ -61,37 +61,28 @@ def process_issues(issues_updated=None, issues_author=None, updated_date_range=N
                 created_on = pd.to_datetime(issue.created_on).replace(tzinfo=None)
                 updated_on = pd.to_datetime(issue.updated_on).replace(tzinfo=None)
 
-                if created_date_range:
-                    created_date_filter_passed = (
-                            (created_start_date is None or created_start_date <= created_on) and
-                            (created_end_date is None or created_on <= created_end_date)
-                    )
-                else:
-                    created_date_filter_passed = True
+                days_open = np.busday_count(created_on.date(), updated_on.date())
 
-                if created_date_filter_passed:
-                    days_open = np.busday_count(created_on.date(), updated_on.date())
+                additional_issue_data_author = {
+                    'ID': issue.id,
+                    'Tipo': issue.tracker.name,
+                    'Author': issue.author.name,
+                    'Días abierto': days_open,
+                    'Creado': issue.created_on,
+                    'Actualizado': issue.updated_on,
+                    'Oficina': custom_fields_data.get('Oficina', None),
+                    'Canal de contacto': custom_fields_data.get('Canal de contacto', None),
+                    'Trámite': custom_fields_data.get('Trámite', None),
+                    'Modulo Rcd': custom_fields_data.get('Modulo Rcd', None),
+                    'Sistema': custom_fields_data.get('Sistema', custom_fields_data.get('Tipo', None)),
+                    'Modulo Generales y Tramites': custom_fields_data.get('Modulo Generales y Tramites', None),
+                    'Sistemas F': custom_fields_data.get('Sistema') or issue.tracker.name,
+                    'Modulos F': ', '.join([custom_fields_data.get('Trámite', ''),
+                                            custom_fields_data.get('Modulo Rcd', ''),
+                                            custom_fields_data.get('Modulo Generales y Tramites', '')]).strip(', ')
+                }
 
-                    additional_issue_data_author = {
-                        'ID': issue.id,
-                        'Tipo': issue.tracker.name,
-                        'Author': issue.author.name,
-                        'Días abierto': days_open,
-                        'Creado': issue.created_on,
-                        'Actualizado': issue.updated_on,
-                        'Oficina': custom_fields_data.get('Oficina', None),
-                        'Canal de contacto': custom_fields_data.get('Canal de contacto', None),
-                        'Trámite': custom_fields_data.get('Trámite', None),
-                        'Modulo Rcd': custom_fields_data.get('Modulo Rcd', None),
-                        'Sistema': custom_fields_data.get('Sistema', custom_fields_data.get('Tipo', None)),
-                        'Modulo Generales y Tramites': custom_fields_data.get('Modulo Generales y Tramites', None),
-                        'Sistemas F': custom_fields_data.get('Sistema') or issue.tracker.name,
-                        'Modulos F': ', '.join([custom_fields_data.get('Trámite', ''),
-                                                custom_fields_data.get('Modulo Rcd', ''),
-                                                custom_fields_data.get('Modulo Generales y Tramites', '')]).strip(', ')
-                    }
-
-                    data_author.append(additional_issue_data_author)
+                data_author.append(additional_issue_data_author)
 
     df_updated = pd.DataFrame(data_updated)
     df_author = pd.DataFrame(data_author)
