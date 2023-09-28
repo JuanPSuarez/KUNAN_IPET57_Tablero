@@ -68,15 +68,15 @@ class RedmineReportApp(QMainWindow):
 
         issues_updated = get_issues_by_update(redmine, project_id, updated_date_range=updated_date_range)
 
-        issues_author = get_issues_by_create(redmine, project_id, created_date_range=created_date_range)
+        issues_created = get_issues_by_create(redmine, project_id, created_date_range=created_date_range)
 
-        df_updated, df_author = process_issues(issues_updated, issues_author,
+        df_updated, df_created = process_issues(issues_updated, issues_created,
                                                updated_date_range=updated_date_range,
                                                created_date_range=created_date_range)
 
         excel_file = 'problemas_redmine.xlsx'
 
-        export_to_excel(df_updated, df_author, excel_file)
+        export_to_excel(df_updated, df_created, excel_file)
 
         os.system('start excel.exe "{}"'.format(excel_file))
 
