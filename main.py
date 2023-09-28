@@ -7,10 +7,6 @@ from excel_export import export_to_excel
 import os
 
 
-def sumar_un_dia(fecha):
-    return fecha.addDays(1)
-
-
 class RedmineReportApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -55,11 +51,11 @@ class RedmineReportApp(QMainWindow):
         self.central_widget.setLayout(layout)
 
     def generate_report(self):
-        updated_start_date = self.start_date_updated.date().addDays(1).toString("yyyy-MM-dd") + "T00:00:00Z"
-        updated_end_date = self.end_date_updated.date().addDays(1).toString("yyyy-MM-dd") + "T23:59:59Z"
+        updated_start_date = self.start_date_updated.date().toString("yyyy-MM-dd") + "T00:00:00Z"
+        updated_end_date = self.end_date_updated.date().toString("yyyy-MM-dd") + "T23:59:59Z"
 
-        created_start_date = self.start_date_created.date().addDays(1).toString("yyyy-MM-dd") + "T00:00:00Z"
-        created_end_date = self.end_date_created.date().addDays(1).toString("yyyy-MM-dd") + "T23:59:59Z"
+        created_start_date = self.start_date_created.date().toString("yyyy-MM-dd") + "T00:00:00Z"
+        created_end_date = self.end_date_created.date().toString("yyyy-MM-dd") + "T23:59:59Z"
 
         updated_date_range = [updated_start_date, updated_end_date]
         created_date_range = [created_start_date, created_end_date]
