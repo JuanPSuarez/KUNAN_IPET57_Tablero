@@ -80,9 +80,7 @@ class RedmineReportApp(QMainWindow):
 
         issues_created = get_issues_by_create(redmine, project_id, created_date_range=created_date_range)
 
-        df_updated, df_created = process_issues(issues_updated, issues_created,
-                                               updated_date_range=updated_date_range,
-                                               created_date_range=created_date_range)
+        df_updated, df_created = process_issues(issues_updated, issues_created)
 
         excel_file = 'problemas_redmine.xlsx'
 
