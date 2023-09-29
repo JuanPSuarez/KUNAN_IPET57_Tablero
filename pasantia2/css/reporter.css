@@ -1,0 +1,38 @@
+
+header{
+    background-color: #4E606A;
+    
+}
+main{
+    text-align: center;
+}
+main h1{
+    font-size: 30px;
+    color: #40BAFF;
+    font-family:Arial, Helvetica, sans-serif;
+}
+main .container{
+    width: 800px;
+    height: 440px;
+    top: -184px;
+    left: -321px;
+    border-radius: 10px;
+    background-color: #4E606A;
+    font-family:Arial, Helvetica, sans-serif;
+
+}
+
+main .container p{
+    left: 19px;
+}
+
+footer{
+    width: 100%;
+    padding: 29px;
+    background-color: #4E606A;
+}
+
+.imgg{
+    display: flex;
+    justify-content:space-around;
+}
