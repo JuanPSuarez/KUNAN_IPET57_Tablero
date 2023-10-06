@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='./css/reporter.css') }}">
+  <title>Reporter</title>
+</head>
+
+<body>
+  <header class="p-3 mb-3 border-bottom">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg justify-content-center">
+        <a class="navbar-brand" href="{{ url_for('landing') }}">
+          <img src="{{ url_for('static', filename='./img/rs.png') }}" alt="" width="320" height="50">
+        </a>
+        <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link text-light" href="{{ url_for('landing') }}">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">REPORTER</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container mt-5">
+      <h1>Generador de Informes Redmine</h1>
+      <form method="POST" action="/reporter">
+        <div class="input-group">
+          <p>Listado de operadores</p>
+          <select id="operators" name="selected_operators[]" multiple>
+            {% for author_id, author_name in author_data %}
+            <option value="{{ author_id }}">{{ author_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <p class="title">Fecha de actualización de tickets</p>
+        <div class="input-group">
+          <div class="date-input">
+            <label for="start_date_updated">Desde</label>
+            <input type="date" id="start_date_updated" name="start_date_updated" required>
+          </div>
+          <div class="date-input">
+            <label for="end_date_updated">Hasta</label>
+            <input type="date" id="end_date_updated" name="end_date_updated" required>
+          </div>
+        </div>
+        <p class="title">Fecha de creación de tickets</p>
+        <div class="input-group">
+          <div class="date-input">
+            <label for="start_date_created">Desde</label>
+            <input type="date" id="start_date_created" name="start_date_created" required>
+          </div>
+          <div class="date-input">
+            <label for="end_date_created">Hasta</label>
+            <input type="date" id="end_date_created" name="end_date_created" required>
+          </div>
+        </div>
+        <button type= "submit" class="btn btn-custom" id="startButton">Generate Report</button>
+        <div id="spinnerContainer" class="hidden">
+        <div class="spinner"></div>
+        <script>
+          
+          const startButton = document.getElementById('startButton');
+          const spinnerContainer = document.getElementById('spinnerContainer');
+
+          startButton.addEventListener('click', () => {
+          spinnerContainer.classList.remove('hidden');
+
+
+          setTimeout(() => {
+
+          spinnerContainer.classList.add('hidden');
+          }, 2000); 
+          });
+
+        </script>
+      </form>
+    </div>
+  </main>
+
+  <footer class="text-white py-3">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-md-4 d-flex align-items-center">
+          <img src="{{ url_for('static', filename='./img/rs2.png') }}" alt="Logo" class="img-fluid">
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-end">
+          <ul class="nav">
+            <li class="nav-item ms-3">
+              <a class="nav-link" href="#">
+                <img src="{{ url_for('static', filename='./img/rs4.png') }}" alt="Logo" class="img-fluid">
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
