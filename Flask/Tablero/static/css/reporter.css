@@ -137,8 +137,8 @@ footer {
     height: 50px;
     animation: spin 1s linear infinite;
     position: relative;
-    bottom: 60px;
-    left: 450px;
+    bottom: 350px;
+    left: 350px;
 }
 
 @keyframes spin {
