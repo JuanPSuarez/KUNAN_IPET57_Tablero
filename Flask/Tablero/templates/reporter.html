@@ -70,25 +70,30 @@
             <input type="date" id="end_date_created" name="end_date_created" required>
           </div>
         </div>
-        <button type= "submit" class="btn btn-custom" id="startButton">Generate Report</button>
+        <button type="submit" class="btn btn-custom" id="startButton">Generate Report</button>
         <div id="spinnerContainer" class="hidden">
-        <div class="spinner"></div>
+          <div class="spinner"></div>
+        </div>
         <script>
-          
           const startButton = document.getElementById('startButton');
           const spinnerContainer = document.getElementById('spinnerContainer');
 
           startButton.addEventListener('click', () => {
-          spinnerContainer.classList.remove('hidden');
+            spinnerContainer.classList.remove('hidden');
 
 
-          setTimeout(() => {
+            setTimeout(() => {
 
-          spinnerContainer.classList.add('hidden');
-          },1000); 
+              const excelDownloaded = true;
+
+              if (excelDownloaded) {
+                
+                spinnerContainer.classList.add('hidden');
+              }
+            }, 30000); 
           });
-
         </script>
+
       </form>
     </div>
   </main>
