@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='./css/reporter.css') }}">
+  <title>Reporter</title>
+</head>
+
+<body>
+  <header class="p-3 border-bottom">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg justify-content-center">
+        <a class="navbar-brand" href="{{ url_for('landing') }}">
+          <img src="{{ url_for('static', filename='./img/rs.png') }}" alt="" width="320" height="50">
+        </a>
+        <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link text-light" href="{{ url_for('landing') }}">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">REPORTER</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container mt-3">
+      <h1>Generador de Informes Redmine</h1>
+      <form method="POST" action="/reporter">
+        <div class="input-group">
+          <p>Listado de operadores</p>
+          <select id="operators" name="selected_operators[]" multiple>
+          </select>
+        </div>
+        <p class="title">Fecha de actualización de tickets</p>
+        <div class="input-group">
+          <div class="date-input">
+            <label for="start_date_updated">Desde</label>
+            <input type="date" id="start_date_updated" name="start_date_updated" required>
+          </div>
+          <div class="date-input">
+            <label for="end_date_updated">Hasta</label>
+            <input type="date" id="end_date_updated" name="end_date_updated" required>
+          </div>
+        </div>
+        <p class="title">Fecha de creación de tickets</p>
+        <div class="input-group">
+          <div class="date-input">
+            <label for="start_date_created">Desde</label>
+            <input type="date" id="start_date_created" name="start_date_created" required>
+          </div>
+          <div class="date-input">
+            <label for="end_date_created">Hasta</label>
+            <input type="date" id="end_date_created" name="end_date_created" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-custom" id="startButton">Generar Reporte</button>
+        <div class="loader-container" id="loaderContainer">
+          <div class="loader"></div>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="text-white py-3">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-md-4 d-flex align-items-center">
+          <img src="{{ url_for('static', filename='./img/rs2.png') }}" alt="Logo" class="img-fluid">
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-end">
+          <ul class="nav">
+            <li class="nav-item ms-3">
+              <a class="nav-link" href="#">
+                <img src="{{ url_for('static', filename='./img/rs4.png') }}" alt="Logo" class="img-fluid">
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    function updateOperators() {
+      fetch('/get-author-data')
+        .then(response => response.json())
+        .then(data => {
+          const select = document.getElementById('operators');
+          select.innerHTML = '';
+
+          const authorIdsDict = data.author_ids_dict;
+
+          for (const [authorId, authorName] of Object.entries(authorIdsDict)) {
+            const option = document.createElement('option');
+            option.value = authorId;
+            option.textContent = authorName;
+            select.appendChild(option);
+
+            console.log(`Autor ID: ${authorId}, Nombre: ${authorName}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error al cargar operadores:', error);
+        });
+    }
+
+    window.addEventListener('load', updateOperators);
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      function toggleLoader(show) {
+        const loaderContainer = document.getElementById('loaderContainer');
+        if (show) {
+          loaderContainer.classList.add('d-flex');
+        } else {
+          loaderContainer.classList.remove('d-flex');
+        }
+      }
+
+      const startButton = document.getElementById('startButton');
+      startButton.addEventListener('click', function () {
+        toggleLoader(true);
+
+        $.ajax({
+          url: '/reporter',
+          type: 'POST',
+          data: new FormData($('form')[0]),
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            toggleLoader(false);
+          },
+          error: function (error) {
+            console.error('Error al cargar el archivo:', error);
+            toggleLoader(false);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
